@@ -1,0 +1,28 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+build/
+
+# Environment variables
+.env
+
+# Walrus raw evidence files
+walrus/evidence/*.pdf
+walrus/evidence/*.jpg
+walrus/evidence/*.jpeg
+walrus/evidence/*.png
+
+# Walrus upload artifacts
+walrus/uploads/
+
+# Walrus/Sui binaries
+walrus/sui-*
+walrus/move-analyzer
+walrus/test.txt
+walrus/*.bin
+
+# OS files
+.DS_Store
+Thumbs.db
