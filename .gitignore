@@ -8,6 +8,10 @@ build/
 # Environment variables
 .env
 
+# Sui publish artifacts
+contracts/carbonproof/Published.toml
+contracts/carbonproof/build/
+
 # Walrus raw evidence files
 walrus/evidence/
 
