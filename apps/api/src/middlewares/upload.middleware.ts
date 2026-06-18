@@ -1,13 +1,13 @@
 import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
 import { randomUUID } from "node:crypto";
 import multer from "multer";
 import { env } from "../config/env";
 
-const uploadDirectory = path.resolve(
-    process.cwd(),
-    "uploads"
-);
+const uploadDirectory = process.env.VERCEL
+    ? path.join(os.tmpdir(), "carbonproof-ai", "uploads")
+    : path.resolve(process.cwd(), "uploads");
 
 fs.mkdirSync(uploadDirectory, {
     recursive: true,
