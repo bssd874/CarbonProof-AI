@@ -1,7 +1,7 @@
 services:
   - type: web
     name: carbonproof-ai-api
-    env: node
+    runtime: node
     rootDir: apps/api
     plan: free
     buildCommand: npm ci && npm run build
@@ -17,7 +17,9 @@ services:
       - key: GEMINI_MODEL
         value: gemini-3.5-flash
       - key: DATABASE_URL
-        sync: false
+        fromDatabase:
+          name: carbonproof-ai-db
+          property: connectionString
       - key: SUI_NETWORK
         value: testnet
       - key: SUI_RPC_URL
@@ -26,3 +28,9 @@ services:
         sync: false
       - key: UPLOAD_MAX_SIZE_MB
         value: 5
+
+databases:
+  - name: carbonproof-ai-db
+    databaseName: carbonproof
+    user: carbonproof
+    plan: basic-256mb
