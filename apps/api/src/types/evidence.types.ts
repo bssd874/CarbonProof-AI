@@ -10,18 +10,40 @@ export interface Evidence {
     id: string;
     projectId: string;
     evidenceType: EvidenceType;
+
     fileName: string;
+    originalName: string;
+    mimeType: string;
+    fileSize: number;
+    storagePath: string;
+    evidenceHash: string;
 
-    walrusBlobId?: string;
-    evidenceHash?: string;
-    transactionDigest?: string;
+    walrusBlobId?: string | null;
+    walrusObjectId?: string | null;
+    suiObjectId?: string | null;
+    transactionDigest?: string | null;
+    uploadedBy?: string | null;
 
-    uploadedBy?: string;
     createdAt: string;
 }
 
-export interface AddEvidenceRequest {
+export interface EvidenceProofMetadata {
+    walrusBlobId?: string;
+    walrusObjectId?: string;
+    suiObjectId?: string;
+    transactionDigest?: string;
+}
+
+export interface CreateEvidenceData {
     evidenceType: EvidenceType;
+
     fileName: string;
+    originalName: string;
+    mimeType: string;
+    fileSize: number;
+    storagePath: string;
+    evidenceHash: string;
+
     uploadedBy?: string;
+    proofMetadata?: EvidenceProofMetadata;
 }

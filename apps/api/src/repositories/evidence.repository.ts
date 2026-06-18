@@ -1,40 +1,126 @@
-import { randomUUID } from "crypto";
-import { evidences } from "../data/seed";
+import { prisma } from "../config/database";
 import {
-    AddEvidenceRequest,
-    Evidence,
+    CreateEvidenceData,
+    EvidenceProofMetadata,
 } from "../types/evidence.types";
+import {
+    fromPrismaEvidenceType,
+    toPrismaEvidenceType,
+} from "../utils/prisma-mapper";
 
 export class EvidenceRepository {
-    findByProjectId(projectId: string): Evidence[] {
-        return evidences.filter(
-            (evidence) => evidence.projectId === projectId
-        );
+    async findByProjectId(projectId: string) {
+        const evidences =
+            await prisma.evidence.findMany({
+                where: {
+                    projectId,
+                },
+
+                orderBy: {
+                    createdAt: "desc",
+                },
+            });
+
+        return evidences.map((evidence) => ({
+            ...evidence,
+
+            evidenceType:
+                fromPrismaEvidenceType(
+                    evidence.evidenceType
+                ),
+
+            createdAt:
+                evidence.createdAt.toISOString(),
+        }));
     }
 
-    create(
+    async create(
         projectId: string,
-        payload: AddEvidenceRequest
-    ): Evidence {
-        const uniqueId = randomUUID();
+        payload: CreateEvidenceData
+    ) {
+        const evidence =
+            await prisma.evidence.create({
+                data: {
+                    projectId,
 
-        const evidence: Evidence = {
-            id: uniqueId,
-            projectId,
-            evidenceType: payload.evidenceType,
-            fileName: payload.fileName,
-            uploadedBy: payload.uploadedBy,
+                    evidenceType:
+                        toPrismaEvidenceType(
+                            payload.evidenceType
+                        ),
 
-            // Masih dummy. Nanti diganti hasil Walrus dan Sui asli.
-            walrusBlobId: `mock_walrus_blob_${uniqueId}`,
-            evidenceHash: `mock_evidence_hash_${uniqueId}`,
-            transactionDigest: `mock_sui_tx_${uniqueId}`,
+                    fileName: payload.fileName,
+                    originalName: payload.originalName,
+                    mimeType: payload.mimeType,
+                    fileSize: payload.fileSize,
+                    storagePath: payload.storagePath,
+                    evidenceHash: payload.evidenceHash,
 
-            createdAt: new Date().toISOString(),
+                    uploadedBy:
+                        payload.uploadedBy,
+
+                    walrusBlobId:
+                        payload.proofMetadata
+                            ?.walrusBlobId,
+                    walrusObjectId:
+                        payload.proofMetadata
+                            ?.walrusObjectId,
+                    suiObjectId:
+                        payload.proofMetadata
+                            ?.suiObjectId,
+                    transactionDigest:
+                        payload.proofMetadata
+                            ?.transactionDigest,
+                },
+            });
+
+        return {
+            ...evidence,
+
+            evidenceType:
+                fromPrismaEvidenceType(
+                    evidence.evidenceType
+                ),
+
+            createdAt:
+                evidence.createdAt.toISOString(),
         };
+    }
 
-        evidences.push(evidence);
+    async updateProofMetadata(
+        projectId: string,
+        evidenceId: string,
+        proofMetadata: EvidenceProofMetadata
+    ) {
+        const existingEvidence =
+            await prisma.evidence.findFirst({
+                where: {
+                    id: evidenceId,
+                    projectId,
+                },
+            });
 
-        return evidence;
+        if (!existingEvidence) {
+            return undefined;
+        }
+
+        const evidence = await prisma.evidence.update({
+            where: {
+                id: evidenceId,
+            },
+
+            data: proofMetadata,
+        });
+
+        return {
+            ...evidence,
+
+            evidenceType:
+                fromPrismaEvidenceType(
+                    evidence.evidenceType
+                ),
+
+            createdAt:
+                evidence.createdAt.toISOString(),
+        };
     }
 }

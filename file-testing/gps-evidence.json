@@ -1,0 +1,20 @@
+{
+  "documentType": "gps_metadata_json",
+  "syntheticDemo": true,
+  "projectId": "project_001",
+  "projectName": "Mangrove Restoration - Bekasi Coastal Area",
+  "location": {
+    "name": "Bekasi Coastal Area, Indonesia",
+    "centroid": {
+      "latitude": -6.093,
+      "longitude": 107.043
+    },
+    "coordinateReferenceSystem": "WGS84"
+  },
+  "recordedAt": "2026-06-01T09:30:00+07:00",
+  "mappedAreaHectares": 24.5,
+  "reportedTreeCount": 10000,
+  "collectionMethod": "Handheld GPS and drone waypoint export",
+  "collector": "CarbonProof Demo Field Team",
+  "notes": "Synthetic evidence generated for API and AI verification testing."
+}

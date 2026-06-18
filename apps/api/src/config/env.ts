@@ -6,8 +6,13 @@ export const env = {
     port: Number(process.env.PORT) || 4000,
     nodeEnv: process.env.NODE_ENV || "development",
 
-    aiProvider: process.env.AI_PROVIDER || "mock",
-    aiApiKey: process.env.AI_API_KEY || "",
+    aiProvider: process.env.AI_PROVIDER || "gemini",
+    geminiApiKey: process.env.GEMINI_API_KEY || "",
+    geminiModel:
+        process.env.GEMINI_MODEL || "gemini-3.5-flash",
+
+    uploadMaxSizeMb:
+        Number(process.env.UPLOAD_MAX_SIZE_MB) || 5,
 
     suiNetwork: process.env.SUI_NETWORK || "testnet",
     suiRpcUrl: process.env.SUI_RPC_URL || "",

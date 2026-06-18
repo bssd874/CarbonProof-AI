@@ -14,14 +14,14 @@ export class VerificationController {
     private readonly verificationService =
         new VerificationService();
 
-    verify = (
+    verify = async  (
         req: Request<ProjectParams>,
         res: Response,
         next: NextFunction
     ) => {
         try {
             const report =
-                this.verificationService.verifyProject(req.params.id);
+                await this.verificationService.verifyProject(req.params.id);
 
             if (!report) {
                 return errorResponse(res, "Project not found", 404);
@@ -37,14 +37,14 @@ export class VerificationController {
         }
     };
 
-    getReport = (
+    getReport = async (
         req: Request<ProjectParams>,
         res: Response,
         next: NextFunction
     ) => {
         try {
             const report =
-                this.verificationService.getReport(req.params.id);
+                await this.verificationService.getReport(req.params.id);
 
             if (!report) {
                 return errorResponse(

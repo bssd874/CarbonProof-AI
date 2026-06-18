@@ -1,0 +1,4 @@
+recorded_at,latitude,longitude,tree_count,survival_rate_percent,soil_salinity_ppt,plot_count,source
+2026-04-01,-6.093,107.043,9000,94,18.4,5,synthetic_demo
+2026-05-01,-6.093,107.043,9500,92,18.8,5,synthetic_demo
+2026-06-01,-6.093,107.043,10000,90,19.1,5,synthetic_demo

@@ -1,27 +1,162 @@
-import { verificationReports } from "../data/seed";
+import { Prisma } from "../generated/prisma/client";
+import { prisma } from "../config/database";
 import { VerificationReport } from "../types/verification.types";
+import {
+    fromPrismaRiskScore,
+    toPrismaRiskScore,
+} from "../utils/prisma-mapper";
+
+function toPrismaJson(
+    value: unknown
+): Prisma.InputJsonValue {
+    return JSON.parse(
+        JSON.stringify(value)
+    ) as Prisma.InputJsonValue;
+}
 
 export class VerificationRepository {
-    findByProjectId(
-        projectId: string
-    ): VerificationReport | undefined {
-        return verificationReports.find(
-            (report) => report.projectId === projectId
-        );
-    }
+    async findByProjectId(projectId: string) {
+        const report =
+            await prisma.verificationReport.findUnique({
+                where: {
+                    projectId,
+                },
+            });
 
-    save(report: VerificationReport): VerificationReport {
-        const existingIndex = verificationReports.findIndex(
-            (item) => item.projectId === report.projectId
-        );
-
-        if (existingIndex >= 0) {
-            verificationReports[existingIndex] = report;
-            return report;
+        if (!report) {
+            return undefined;
         }
 
-        verificationReports.push(report);
+        return {
+            id: report.id,
+            projectId: report.projectId,
+            summary: report.summary,
 
-        return report;
+            riskScore: fromPrismaRiskScore(
+                report.riskScore
+            ),
+
+            confidenceScore: report.confidenceScore,
+
+            verifiedEvidence: report.verifiedEvidence,
+            missingEvidence: report.missingEvidence,
+            inconsistencies: report.inconsistencies,
+
+            extractedFacts:
+                report.extractedFacts as unknown as
+                VerificationReport["extractedFacts"],
+
+            recommendation: report.recommendation,
+            model: report.model,
+
+            createdAt: report.createdAt.toISOString(),
+            updatedAt: report.updatedAt.toISOString(),
+        };
+    }
+
+    async save(report: VerificationReport) {
+        const savedReport =
+            await prisma.verificationReport.upsert({
+                where: {
+                    projectId: report.projectId,
+                },
+
+                create: {
+                    id: report.id,
+                    projectId: report.projectId,
+                    summary: report.summary,
+
+                    riskScore: toPrismaRiskScore(
+                        report.riskScore
+                    ),
+
+                    confidenceScore:
+                        report.confidenceScore,
+
+                    verifiedEvidence:
+                        report.verifiedEvidence,
+
+                    missingEvidence:
+                        report.missingEvidence,
+
+                    inconsistencies:
+                        report.inconsistencies,
+
+                    extractedFacts: toPrismaJson(
+                        report.extractedFacts
+                    ),
+
+                    recommendation:
+                        report.recommendation,
+
+                    model: report.model,
+                },
+
+                update: {
+                    summary: report.summary,
+
+                    riskScore: toPrismaRiskScore(
+                        report.riskScore
+                    ),
+
+                    confidenceScore:
+                        report.confidenceScore,
+
+                    verifiedEvidence:
+                        report.verifiedEvidence,
+
+                    missingEvidence:
+                        report.missingEvidence,
+
+                    inconsistencies:
+                        report.inconsistencies,
+
+                    extractedFacts: toPrismaJson(
+                        report.extractedFacts
+                    ),
+
+                    recommendation:
+                        report.recommendation,
+
+                    model: report.model,
+                },
+            });
+
+        return {
+            id: savedReport.id,
+            projectId: savedReport.projectId,
+            summary: savedReport.summary,
+
+            riskScore: fromPrismaRiskScore(
+                savedReport.riskScore
+            ),
+
+            confidenceScore:
+                savedReport.confidenceScore,
+
+            verifiedEvidence:
+                savedReport.verifiedEvidence,
+
+            missingEvidence:
+                savedReport.missingEvidence,
+
+            inconsistencies:
+                savedReport.inconsistencies,
+
+            extractedFacts:
+                savedReport.extractedFacts as unknown as
+                VerificationReport["extractedFacts"],
+
+            recommendation:
+                savedReport.recommendation,
+
+            model: savedReport.model,
+
+            createdAt:
+                savedReport.createdAt.toISOString(),
+
+            updatedAt:
+                savedReport.updatedAt.toISOString(),
+        };
     }
 }

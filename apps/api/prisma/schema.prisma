@@ -1,0 +1,99 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum CarbonProjectStatus {
+  DRAFT
+  PENDING_EVIDENCE
+  AI_REVIEWED
+  VERIFIED
+  CREDIT_ISSUED
+}
+
+enum EvidenceType {
+  AUDIT_REPORT_PDF
+  DRONE_IMAGE
+  SENSOR_CSV
+  GPS_METADATA_JSON
+  SURVIVAL_RATE_REPORT
+  AUDITOR_SIGNATURE
+}
+
+enum RiskScore {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+model CarbonProject {
+  id          String              @id @default(uuid())
+  name        String
+  location    String
+  claim       String
+  description String
+  status      CarbonProjectStatus @default(PENDING_EVIDENCE)
+  ownerWallet String?
+
+  evidences          Evidence[]
+  verificationReport VerificationReport?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("carbon_projects")
+}
+
+model Evidence {
+  id           String       @id @default(uuid())
+  projectId    String
+  evidenceType EvidenceType
+
+  fileName     String
+  originalName String
+  mimeType     String
+  fileSize     Int
+  storagePath  String
+  evidenceHash String
+
+  walrusBlobId      String?
+  walrusObjectId    String?
+  suiObjectId       String?
+  transactionDigest String?
+  uploadedBy        String?
+
+  project CarbonProject @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@index([projectId])
+  @@map("evidences")
+}
+
+model VerificationReport {
+  id        String @id @default(uuid())
+  projectId String @unique
+
+  summary         String
+  riskScore       RiskScore
+  confidenceScore Int
+
+  verifiedEvidence String[]
+  missingEvidence  String[]
+  inconsistencies  String[]
+  extractedFacts   Json
+
+  recommendation String
+  model          String
+
+  project CarbonProject @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("verification_reports")
+}

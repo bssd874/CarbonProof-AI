@@ -16,13 +16,13 @@ export class ProjectController {
 
     
 
-    getAll = (
+    getAll = async (
         _req: Request,
         res: Response,
         next: NextFunction
     ) => {
         try {
-            const projects = this.projectService.getAllProjects();
+            const projects = await this.projectService.getAllProjects();
 
             return successResponse(
                 res,
@@ -34,13 +34,13 @@ export class ProjectController {
         }
     };
 
-    getById = (
+    getById = async (
         req: Request<ProjectParams>,
         res: Response,
         next: NextFunction
     ) => {
         try {
-            const project = this.projectService.getProjectById(
+            const project = await this.projectService.getProjectById(
                 req.params.id
             );
 
@@ -58,7 +58,7 @@ export class ProjectController {
         }
     };
 
-    create = (
+    create = async (
         req: Request,
         res: Response,
         next: NextFunction
@@ -75,7 +75,7 @@ export class ProjectController {
                 );
             }
 
-            const project = this.projectService.createProject(
+            const project = await this.projectService.createProject(
                 validation.data
             );
 

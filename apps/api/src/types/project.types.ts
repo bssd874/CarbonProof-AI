@@ -12,7 +12,9 @@ export interface CarbonProject {
     claim: string;
     description: string;
     status: CarbonProjectStatus;
-    ownerWallet?: string;
+
+    ownerWallet: string | null;
+
     createdAt: string;
     updatedAt: string;
 }

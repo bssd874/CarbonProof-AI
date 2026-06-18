@@ -1,5 +1,11 @@
 import { z } from "zod";
 
+const optionalProofString = z
+    .string()
+    .trim()
+    .min(1)
+    .optional();
+
 export const addEvidenceSchema = z.object({
     evidenceType: z.enum([
         "audit_report_pdf",
@@ -10,10 +16,34 @@ export const addEvidenceSchema = z.object({
         "auditor_signature",
     ]),
 
-    fileName: z
+    uploadedBy: z
         .string()
         .trim()
-        .min(1, "File name is required"),
+        .optional(),
 
-    uploadedBy: z.string().trim().optional(),
+    walrusBlobId: optionalProofString,
+    walrusObjectId: optionalProofString,
+    suiObjectId: optionalProofString,
+    transactionDigest: optionalProofString,
 });
+
+export const syncEvidenceProofSchema = z
+    .object({
+        walrusBlobId: optionalProofString,
+        walrusObjectId: optionalProofString,
+        suiObjectId: optionalProofString,
+        transactionDigest: optionalProofString,
+    })
+    .refine(
+        (value) =>
+            Boolean(
+                value.walrusBlobId ||
+                    value.walrusObjectId ||
+                    value.suiObjectId ||
+                    value.transactionDigest
+            ),
+        {
+            message:
+                "At least one proof metadata field is required",
+        }
+    );

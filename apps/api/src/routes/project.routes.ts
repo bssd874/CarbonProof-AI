@@ -2,6 +2,7 @@ import { Router } from "express";
 import { EvidenceController } from "../controllers/evidence.controller";
 import { ProjectController } from "../controllers/project.controller";
 import { VerificationController } from "../controllers/verification.controller";
+import { uploadEvidenceFile } from "../middlewares/upload.middleware";
 
 const projectRouter = Router();
 
@@ -15,7 +16,13 @@ projectRouter.get("/:id", projectController.getById);
 
 projectRouter.post(
     "/:id/evidence",
+    uploadEvidenceFile.single("file"),
     evidenceController.create
+);
+
+projectRouter.patch(
+    "/:id/evidence/:evidenceId/proof",
+    evidenceController.syncProof
 );
 
 projectRouter.post(
