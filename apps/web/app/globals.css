@@ -1,0 +1,100 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+  --canvas: #f6f4ee;
+  --paper: #fbfaf5;
+  --ink: #101414;
+  --forest: #153b2f;
+  --navy: #0b1722;
+  --teal: #2ea8a1;
+  --line: #d8d5c8;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  background: var(--canvas);
+  color: var(--ink);
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button,
+a,
+input,
+textarea,
+select {
+  outline-color: #2ea8a1;
+  outline-offset: 3px;
+}
+
+::selection {
+  background: #78d6d0;
+  color: #0b1722;
+}
+
+@layer components {
+  .page-shell {
+    @apply mx-auto w-full max-w-[1440px] px-5 sm:px-8 lg:px-14;
+  }
+
+  .display-title {
+    @apply font-display font-bold tracking-normal text-forest;
+  }
+
+  .panel {
+    @apply border border-line bg-paper shadow-panel;
+    border-radius: 8px;
+  }
+
+  .eyebrow {
+    @apply font-mono text-[11px] font-semibold uppercase text-teal;
+  }
+
+  .field-label {
+    @apply mb-2 block text-xs font-semibold text-muted;
+  }
+
+  .field-input {
+    @apply min-h-12 w-full border border-line bg-white px-4 text-sm text-ink transition focus:border-teal focus:ring-2 focus:ring-teal/15;
+    border-radius: 7px;
+  }
+}
+
+@keyframes shimmer {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, #e9e7df 25%, #f5f3ec 50%, #e9e7df 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite linear;
+}

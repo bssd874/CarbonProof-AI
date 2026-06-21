@@ -1,0 +1,67 @@
+{
+  "type": "FeatureCollection",
+  "name": "Pulang Pisau Peatland Restoration Boundary",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
+    }
+  },
+  "metadata": {
+    "projectId": "PP-PEAT-2026-001",
+    "surveyDate": "2026-06-12",
+    "surveyMethod": "GNSS field traverse and drone orthomosaic alignment",
+    "reportedAreaHectares": 250.0,
+    "horizontalAccuracyMeters": 1.8,
+    "dataClassification": "hackathon-demo"
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "featureType": "restoration_boundary",
+        "blockName": "Pulang Pisau Block A",
+        "status": "active_restoration",
+        "areaHectares": 250.0
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [114.199840, -2.761920],
+            [114.214360, -2.760870],
+            [114.224120, -2.767640],
+            [114.221480, -2.779610],
+            [114.207750, -2.782040],
+            [114.197910, -2.773150],
+            [114.199840, -2.761920]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "featureType": "canal_blocking_structure",
+        "structureId": "CBS-07",
+        "inspectionStatus": "operational"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [114.211280, -2.771340]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "featureType": "monitoring_station",
+        "stationId": "PP-WL-02",
+        "sensorType": "water_table_logger"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [114.212944, -2.770318]
+      }
+    }
+  ]
+}

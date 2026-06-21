@@ -1,5 +1,6 @@
 import cors from "cors";
 import express, { Request, Response } from "express";
+import { prisma } from "./config/database";
 import { errorMiddleware } from "./middlewares/error.middleware";
 import { notFoundMiddleware } from "./middlewares/not-found.middleware";
 import projectRouter from "./routes/project.routes";
@@ -17,18 +18,49 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.get("/", (_req: Request, res: Response) => {
+    return successResponse(
+        res,
+        "CarbonProof AI API",
+        {
+            service: "carbonproof-ai-api",
+            status: "running",
+            health: "/api/health",
+            projects: "/api/projects",
+        }
+    );
+});
+
 app.get(
     "/api/health",
-    (_req: Request, res: Response) => {
-        return successResponse(
-            res,
-            "CarbonProof AI backend is running",
-            {
-                service: "carbonproof-ai-api",
-                status: "healthy",
-                timestamp: new Date().toISOString(),
-            }
-        );
+    async (_req: Request, res: Response) => {
+        try {
+            await prisma.$queryRaw`SELECT 1`;
+
+            return successResponse(
+                res,
+                "CarbonProof AI backend is running",
+                {
+                    service: "carbonproof-ai-api",
+                    status: "healthy",
+                    database: "connected",
+                    timestamp: new Date().toISOString(),
+                }
+            );
+        } catch (error) {
+            console.error("Health check database failure", error);
+
+            return res.status(503).json({
+                success: false,
+                message: "Backend is running but the database is unavailable",
+                data: {
+                    service: "carbonproof-ai-api",
+                    status: "degraded",
+                    database: "disconnected",
+                    timestamp: new Date().toISOString(),
+                },
+            });
+        }
     }
 );
 
