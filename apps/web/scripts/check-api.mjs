@@ -1,4 +1,4 @@
-const API_URL = (process.env.NEXT_PUBLIC_API_URL || "https://carbonproof-ai-api-git-boni-task-bssd874s-projects.vercel.app").replace(/\/$/, "");
+const API_URL = (process.env.NEXT_PUBLIC_API_URL || "https://carbonproof-ai-api.vercel.app").replace(/\/$/, "");
 const origin = "http://localhost:3000";
 
 async function readJson(path) {

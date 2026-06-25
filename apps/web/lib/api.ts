@@ -10,7 +10,7 @@ import type {
 } from "@/lib/types";
 
 export const API_URL = (
-  process.env.NEXT_PUBLIC_API_URL || "https://carbonproof-ai-api-git-boni-task-bssd874s-projects.vercel.app"
+  process.env.NEXT_PUBLIC_API_URL || "https://carbonproof-ai-api.vercel.app"
 ).replace(/\/$/, "");
 
 export class ApiError extends Error {
