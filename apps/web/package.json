@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "type-check": "tsc --noEmit",
-    "check:api": "node --env-file=.env.local scripts/check-api.mjs"
+    "check:api": "node --env-file=.env.local scripts/check-api.mjs",
+    "check:mvp": "node --env-file=.env.local scripts/check-mvp.mjs"
   },
   "dependencies": {
     "lucide-react": "^0.468.0",

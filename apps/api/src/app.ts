@@ -1,6 +1,7 @@
 import cors from "cors";
 import express, { Request, Response } from "express";
 import { prisma } from "./config/database";
+import { env } from "./config/env";
 import { errorMiddleware } from "./middlewares/error.middleware";
 import { notFoundMiddleware } from "./middlewares/not-found.middleware";
 import projectRouter from "./routes/project.routes";
@@ -34,6 +35,19 @@ app.get("/", (_req: Request, res: Response) => {
 app.get(
     "/api/health",
     async (_req: Request, res: Response) => {
+        if (env.dataStore === "memory") {
+            return successResponse(
+                res,
+                "CarbonProof AI local demo backend is running",
+                {
+                    service: "carbonproof-ai-api",
+                    status: "healthy",
+                    database: "memory",
+                    timestamp: new Date().toISOString(),
+                }
+            );
+        }
+
         try {
             await prisma.$queryRaw`SELECT 1`;
 

@@ -25,7 +25,7 @@ export default function LandingPage() {
         <SiteHeader dark />
         <div className="page-shell grid min-h-[610px] items-center gap-14 py-20 lg:grid-cols-[1.1fr_0.9fr]">
           <div>
-            <p className="eyebrow text-cyan">Walrus storage · Sui registry · AI risk review</p>
+            <p className="eyebrow text-cyan">Walrus storage / Sui registry / AI risk review</p>
             <h1 className="mt-7 max-w-3xl font-display text-5xl font-bold leading-[1.04] tracking-normal sm:text-6xl lg:text-[68px]">
               Verifiable evidence for carbon and impact credits
             </h1>

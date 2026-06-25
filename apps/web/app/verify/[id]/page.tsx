@@ -44,7 +44,7 @@ export default function PublicVerifyPage() {
     ["Evidence uploaded", project.evidences.length > 0, `${project.evidences.length} files in the project trail`],
     ["Stored on Walrus", project.evidences.some((item) => item.walrusBlobId), "Content-addressed storage references available"],
     ["Registered on Sui", project.evidences.some((item) => item.suiObjectId), "Evidence metadata anchored on testnet"],
-    ["AI verification", Boolean(report), report ? `${report.riskScore} risk · ${report.confidenceScore}% confidence` : "Report pending"],
+    ["AI verification", Boolean(report), report ? `${report.riskScore} risk / ${report.confidenceScore}% confidence` : "Report pending"],
   ] as const;
 
   return (
@@ -69,7 +69,7 @@ export default function PublicVerifyPage() {
             <div className="max-w-3xl">
               <p className="eyebrow">CarbonProof certificate view</p>
               <h2 className="mt-5 font-display text-3xl font-bold leading-tight text-forest sm:text-4xl">{project.name}</h2>
-              <p className="mt-4 text-sm text-muted">{project.location} · Updated {formatDate(project.updatedAt)}</p>
+              <p className="mt-4 text-sm text-muted">{project.location} / Updated {formatDate(project.updatedAt)}</p>
             </div>
             <div className="flex items-center gap-3">
               {report ? <RiskPill risk={report.riskScore} /> : null}

@@ -23,7 +23,7 @@ export function EvidenceCard({ evidence, actions, compact = false, className = "
           </span>
           <div className="min-w-0">
             <h3 className="font-display text-base font-bold text-ink">{evidenceTypeLabels[evidence.evidenceType]}</h3>
-            <p className="mt-1 truncate text-xs text-muted" title={evidence.originalName}>{evidence.originalName} · {formatBytes(evidence.fileSize)} · {formatDate(evidence.createdAt)}</p>
+            <p className="mt-1 truncate text-xs text-muted" title={evidence.originalName}>{evidence.originalName} / {formatBytes(evidence.fileSize)} / {formatDate(evidence.createdAt)}</p>
           </div>
         </div>
         {actions}

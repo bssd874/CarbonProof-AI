@@ -92,7 +92,7 @@ export interface ApiEnvelope<T> {
 export interface ApiHealth {
   service: string;
   status: "healthy" | "degraded";
-  database: "connected" | "disconnected";
+  database: "connected" | "disconnected" | "memory";
   timestamp: string;
 }
 

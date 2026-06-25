@@ -1,5 +1,7 @@
 import { Prisma } from "../generated/prisma/client";
 import { prisma } from "../config/database";
+import { env } from "../config/env";
+import { memoryStore } from "../config/memory-store";
 import { VerificationReport } from "../types/verification.types";
 import {
     fromPrismaRiskScore,
@@ -16,6 +18,10 @@ function toPrismaJson(
 
 export class VerificationRepository {
     async findByProjectId(projectId: string) {
+        if (env.dataStore === "memory") {
+            return memoryStore.reports.get(projectId);
+        }
+
         const report =
             await prisma.verificationReport.findUnique({
                 where: {
@@ -55,6 +61,18 @@ export class VerificationRepository {
     }
 
     async save(report: VerificationReport) {
+        if (env.dataStore === "memory") {
+            const existing = memoryStore.reports.get(report.projectId);
+            const savedReport = {
+                ...report,
+                createdAt: existing?.createdAt ?? report.createdAt,
+                updatedAt: new Date().toISOString(),
+            };
+
+            memoryStore.reports.set(report.projectId, savedReport);
+            return savedReport;
+        }
+
         const savedReport =
             await prisma.verificationReport.upsert({
                 where: {

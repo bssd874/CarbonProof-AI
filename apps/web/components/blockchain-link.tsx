@@ -18,7 +18,7 @@ export function BlockchainLink({ label, value, href, network, chain = "other", c
     <>
       <span className="grid size-9 shrink-0 place-items-center rounded-md bg-teal/10 text-teal"><Icon className="size-4" aria-hidden="true" /></span>
       <span className="min-w-0 flex-1">
-        <span className="block text-[10px] font-semibold uppercase text-muted">{label}{network ? ` · ${network}` : ""}</span>
+        <span className="block text-[10px] font-semibold uppercase text-muted">{label}{network ? ` / ${network}` : ""}</span>
         <span className="mt-0.5 block truncate font-mono text-[11px] font-semibold text-forest" title={value || undefined}>{children || shorten(value)}</span>
       </span>
       {href ? <ExternalLink className="size-4 shrink-0 text-teal" aria-hidden="true" /> : null}

@@ -5,6 +5,10 @@ dotenv.config();
 export const env = {
     port: Number(process.env.PORT) || 4000,
     nodeEnv: process.env.NODE_ENV || "development",
+    dataStore:
+        process.env.DATA_STORE === "memory"
+            ? "memory"
+            : "postgres",
 
     aiProvider: process.env.AI_PROVIDER || "gemini",
     geminiApiKey: process.env.GEMINI_API_KEY || "",

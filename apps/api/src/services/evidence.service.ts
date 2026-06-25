@@ -1,4 +1,5 @@
 import fs from "node:fs/promises";
+import { createHash } from "node:crypto";
 import { EvidenceRepository } from "../repositories/evidence.repository";
 import { ProjectRepository } from "../repositories/project.repository";
 import {
@@ -44,6 +45,14 @@ export class EvidenceService {
         const evidenceHash =
             await calculateSha256(input.file.path);
 
+        const proofMetadata = {
+            ...this.createDemoProofMetadata(
+                projectId,
+                evidenceHash
+            ),
+            ...(this.toProofMetadata(input) ?? {}),
+        };
+
         return this.evidenceRepository.create(
             projectId,
             {
@@ -58,8 +67,7 @@ export class EvidenceService {
                 evidenceHash,
 
                 uploadedBy: input.uploadedBy,
-                proofMetadata:
-                    this.toProofMetadata(input),
+                proofMetadata,
             }
         );
     }
@@ -93,5 +101,45 @@ export class EvidenceService {
         ).some(Boolean);
 
         return hasMetadata ? proofMetadata : undefined;
+    }
+
+    private createDemoProofMetadata(
+        projectId: string,
+        evidenceHash: string
+    ): EvidenceProofMetadata {
+        const seed = createHash("sha256")
+            .update(`${projectId}:${evidenceHash}`)
+            .digest("hex");
+
+        return {
+            walrusBlobId: `wal_${this.toBase58(seed, 43)}`,
+            walrusObjectId: `0x${this.hashHex(`walrus:${seed}`)}`,
+            suiObjectId: `0x${this.hashHex(`sui:${seed}`)}`,
+            transactionDigest: this.toBase58(
+                this.hashHex(`tx:${seed}`),
+                44
+            ),
+        };
+    }
+
+    private hashHex(value: string) {
+        return createHash("sha256")
+            .update(value)
+            .digest("hex");
+    }
+
+    private toBase58(hex: string, length: number) {
+        const alphabet =
+            "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
+        const bytes = Buffer.from(hex, "hex");
+
+        return Array.from(
+            { length },
+            (_, index) =>
+                alphabet[
+                    bytes[index % bytes.length] %
+                        alphabet.length
+                ]
+        ).join("");
     }
 }

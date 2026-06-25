@@ -18,7 +18,7 @@ export function EvidenceTrail({ evidences, compact = false }: { evidences: Evide
                 <div>
                   <p className="text-sm font-semibold text-ink">{evidenceTypeLabels[evidence.evidenceType]}</p>
                   <p className="mt-1 text-xs text-muted">
-                    {evidence.originalName} · {formatBytes(evidence.fileSize)} · {formatDate(evidence.createdAt)}
+                    {evidence.originalName} / {formatBytes(evidence.fileSize)} / {formatDate(evidence.createdAt)}
                   </p>
                 </div>
                 <span className="inline-flex items-center gap-1 rounded-full bg-leaf/15 px-3 py-1 text-[11px] font-semibold text-moss">

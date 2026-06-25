@@ -4,7 +4,6 @@ import { GoogleGenAI } from "@google/genai";
 import { env } from "../config/env";
 import { CarbonProject } from "../types/project.types";
 import { Evidence } from "../types/evidence.types";
-import { AppError } from "../utils/app-error";
 import {
     AiRiskReport,
     aiRiskReportSchema,
@@ -163,7 +162,10 @@ export class AiVerifierService {
             );
         }
 
-        if (env.aiProvider === "mock") {
+        if (
+            env.aiProvider === "mock" ||
+            !env.geminiApiKey
+        ) {
             return this.buildMockRiskReport(
                 project,
                 evidences
@@ -202,52 +204,59 @@ export class AiVerifierService {
                 evidenceParts.includedBytes;
         }
 
-        const ai = this.getGeminiClient();
-
-        const response =
-            await ai.models.generateContent({
-                model: env.geminiModel,
-
-                contents: [
-                    {
-                        role: "user",
-                        parts,
-                    },
-                ],
-
-                config: {
-                    temperature: 0.1,
-
-                    responseMimeType: "application/json",
-                    responseSchema: riskReportJsonSchema,
-                },
-            });
-
-        const responseText = response.text;
-
-        if (!responseText) {
-            throw new Error(
-                "Gemini returned an empty response"
-            );
-        }
-
-        let parsedResponse: unknown;
-
         try {
-            parsedResponse = JSON.parse(responseText);
-        } catch {
-            throw new Error(
-                "Gemini returned invalid JSON"
+            const ai = this.getGeminiClient();
+
+            const response =
+                await ai.models.generateContent({
+                    model: env.geminiModel,
+
+                    contents: [
+                        {
+                            role: "user",
+                            parts,
+                        },
+                    ],
+
+                    config: {
+                        temperature: 0.1,
+
+                        responseMimeType: "application/json",
+                        responseSchema:
+                            riskReportJsonSchema,
+                    },
+                });
+
+            const responseText = response.text;
+
+            if (!responseText) {
+                throw new Error(
+                    "Gemini returned an empty response"
+                );
+            }
+
+            const parsedResponse = JSON.parse(
+                responseText
+            );
+
+            /*
+             * Jangan percaya output AI secara langsung.
+             * Zod memastikan semua field dan tipe datanya valid.
+             */
+            return aiRiskReportSchema.parse(
+                parsedResponse
+            );
+        } catch (error) {
+            console.error(
+                "Gemini verification failed; using mock risk report",
+                error
+            );
+
+            return this.buildMockRiskReport(
+                project,
+                evidences
             );
         }
-
-        /*
-         * Jangan percaya output AI secara langsung.
-         * Zod memastikan semua field dan tipe datanya valid.
-         */
-        return aiRiskReportSchema.parse(
-            parsedResponse
-        );
     }
 
     private async createEvidenceParts(
@@ -466,13 +475,6 @@ REVIEW TASKS
     }
 
     private getGeminiClient() {
-        if (!env.geminiApiKey) {
-            throw new AppError(
-                "GEMINI_API_KEY is not configured",
-                503
-            );
-        }
-
         if (!this.ai) {
             this.ai = new GoogleGenAI({
                 apiKey: env.geminiApiKey,

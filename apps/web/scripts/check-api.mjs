@@ -14,8 +14,8 @@ async function readJson(path) {
 }
 
 const health = await readJson("/api/health");
-if (health.payload.data?.database !== "connected") {
-  throw new Error("Health endpoint did not confirm the database connection");
+if (!["connected", "memory"].includes(health.payload.data?.database)) {
+  throw new Error("Health endpoint did not confirm an available data store");
 }
 
 const projects = await readJson("/api/projects");

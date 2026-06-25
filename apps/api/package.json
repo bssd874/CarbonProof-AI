@@ -11,6 +11,7 @@
     "prisma:generate": "prisma generate",
     "db:migrate": "prisma migrate deploy",
     "db:seed": "tsx prisma/seed.ts",
+    "demo:seed": "node scripts/seed-local-demo.mjs",
     "deploy:start": "npm run db:migrate && npm run start"
   },
   "keywords": [],
