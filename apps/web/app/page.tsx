@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { SiteHeader } from "@/components/site-header";
+import { PUBLIC_DEMO_PROOF_PATH } from "@/lib/demo-project";
 
 const proofFlow = [
   { label: "Upload evidence", detail: "PDF, image, CSV, JSON", icon: FileUp },
@@ -36,7 +37,7 @@ export default function LandingPage() {
               <Link href="/projects/new" className="inline-flex h-12 items-center gap-2 rounded-md bg-forest px-6 text-sm font-semibold text-white transition hover:bg-[#214f3f]">
                 Start verifying <ArrowRight className="size-4" />
               </Link>
-              <Link href="/verify/demo-mangrove-restoration-bekasi" className="inline-flex h-12 items-center rounded-md border border-teal px-6 text-sm font-semibold text-cyan transition hover:bg-teal/10">
+              <Link href={PUBLIC_DEMO_PROOF_PATH} className="inline-flex h-12 items-center rounded-md border border-teal px-6 text-sm font-semibold text-cyan transition hover:bg-teal/10">
                 View demo proof
               </Link>
             </div>

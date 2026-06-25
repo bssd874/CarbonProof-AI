@@ -5,12 +5,13 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
+import { PUBLIC_DEMO_PROOF_PATH } from "@/lib/demo-project";
 
 const links = [
   ["Dashboard", "/dashboard"],
   ["Projects", "/projects/new"],
   ["Evidence", "/dashboard#evidence"],
-  ["Verify", "/verify/demo-mangrove-restoration-bekasi"],
+  ["Verify", PUBLIC_DEMO_PROOF_PATH],
   ["Marketplace", "/marketplace"],
 ] as const;
 

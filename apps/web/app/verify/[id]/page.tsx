@@ -10,6 +10,7 @@ import { RiskPill } from "@/components/status-pill";
 import { SkeletonRows, StatePanel } from "@/components/state-panel";
 import { api } from "@/lib/api";
 import { demoProjectDetail } from "@/lib/demo-data";
+import { resolvePublicProjectId } from "@/lib/demo-project";
 import { formatDate, suiTransactionUrl } from "@/lib/format";
 import type { ProjectDetail } from "@/lib/types";
 
@@ -20,8 +21,9 @@ export default function PublicVerifyPage() {
   const [fallback, setFallback] = useState(false);
 
   useEffect(() => {
+    const projectId = resolvePublicProjectId(params.id);
     api
-      .getProject(params.id)
+      .getProject(projectId)
       .then(setProject)
       .catch(() => {
         setProject(demoProjectDetail);
