@@ -1,4 +1,4 @@
-const API_URL = (process.env.NEXT_PUBLIC_API_URL || "https://carbonproof-ai-api.vercel.app").replace(/\/$/, "");
+const API_URL = (process.env.NEXT_PUBLIC_API_URL || "https://carbonproof-ai-api-git-boni-task-bssd874s-projects.vercel.app").replace(/\/$/, "");
 const runId = new Date().toISOString().replace(/[-:.TZ]/g, "").slice(0, 14);
 
 async function readJson(path, init) {
